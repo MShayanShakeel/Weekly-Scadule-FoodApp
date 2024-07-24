@@ -1,0 +1,33 @@
+.Banner-Main {
+  width: 100%;
+  height: 30vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: url("../../Pictures/maina.jpg") center/cover no-repeat;
+  position: relative;
+}
+
+.Banner-Main::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.Banner-Main > * {
+  position: relative;
+  z-index: 2;
+}
+
+.Banner-Second {
+  color: #ffffff;
+}
+.Banner-Second h1 {
+  margin-bottom: 1rem;
+}

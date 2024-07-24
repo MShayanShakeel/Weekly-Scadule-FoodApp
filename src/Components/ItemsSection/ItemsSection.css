@@ -32,7 +32,6 @@
   color: darkslategray;
 }
 
-
 .ItemsSection-List li::after {
   content: "";
   position: absolute;
@@ -123,7 +122,9 @@
   justify-content: space-between;
   align-items: center;
 }
-
+.delete-button {
+  width: 100%;
+}
 /* MOBULLE RESPONCCIVE DESIGN */
 @media screen and (min-width: 200px) and (max-width: 600px) {
   .card {

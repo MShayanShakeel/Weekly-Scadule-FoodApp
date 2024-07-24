@@ -8,10 +8,20 @@ const GlobalContext = createContext();
 const GlobalProvider = ({ children }) => {
   const [selectedWeek, setSelectedWeek] = useState("");
   const [getCardId, setGetCardId] = useState("");
+  const [globallyStore, setGloballyStore] = useState({});
 
   return (
     <GlobalContext.Provider
-      value={{ selectedWeek, setSelectedWeek, getCardId, setGetCardId }}
+      value={{
+        selectedWeek,
+        setSelectedWeek,
+        getCardId,
+        setGetCardId,
+        // storeAllValue,
+        // setstoreAllValue,
+        globallyStore,
+        setGloballyStore,
+      }}
     >
       {children}
     </GlobalContext.Provider>

@@ -8,9 +8,25 @@ import { GlobalContext } from "../../Store/GlobalContext";
 const ItemsSection = () => {
   const { id } = useParams();
 
-  const [itemValues, setItemValues] = useState("");
-  const { selectedWeek, setSelectedWeek, getCardId, setGetCardId } =
-    useContext(GlobalContext);
+  const [itemValues, setItemValues] = useState([]);
+  const [selectedWeek, setSelectedWeek] = useState([]);
+  const [getCardId, setGetCardId] = useState([]);
+  const [combinedState, setCombinedState] = useState({
+    selectedWeek: "",
+    getCardId: {},
+  });
+  const [dataArray, setDataArray] = useState([]);
+
+  const {
+    // selectedWeek,
+    // setSelectedWeek,
+    // getCardId,
+    // setGetCardId,
+    // storeAllValue,
+    // setStoreAllValue,
+    globallyStore,
+    setGloballyStore,
+  } = useContext(GlobalContext);
   const [selectedCardId, setSelectedCardId] = useState(null);
 
   const handleCardClick = (recipe) => {
@@ -31,8 +47,8 @@ const ItemsSection = () => {
     setSelectedWeek(id);
   }, [id]);
 
-  localStorage.setItem("selectedWeek", JSON.stringify(selectedWeek));
-  localStorage.setItem("getCardId", JSON.stringify(getCardId));
+  // localStorage.setItem("selectedWeek", JSON.stringify(selectedWeek));
+  // localStorage.setItem("getCardId", JSON.stringify(getCardId));
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,7 +68,44 @@ const ItemsSection = () => {
     setSelectedWeek(selectedValue);
   };
 
+
+  useEffect(() => {
+    setCombinedState({
+      selectedWeek: selectedWeek,
+      getCardId: getCardId,
+    });
+  }, [selectedWeek]);
+
+  useEffect(() => {
+    if (
+      combinedState.selectedWeek &&
+      Object.keys(combinedState.getCardId).length > 0
+    ) {
+      setDataArray((prevArray) => [...prevArray, combinedState]);
+    }
+  }, [combinedState]);
+
+  useEffect(() => {
+    setGloballyStore(dataArray);
+  }, [dataArray]);
+
   // TRIM TEXT LOGIC
+
+  // storage logic
+  // if (selectedWeek === "week1") {
+  //   localStorage.setItem("selectedWeek", JSON.stringify(selectedWeek));
+  //   localStorage.setItem("getCardId", JSON.stringify(getCardId));
+  // } else if (selectedWeek === "week2") {
+  //   localStorage.setItem("selectedWeek1", JSON.stringify(selectedWeek));
+  //   localStorage.setItem("getCardId1", JSON.stringify(getCardId));
+  // } else if (selectedWeek === "week3") {
+  //   localStorage.setItem("selectedWeek2", JSON.stringify(selectedWeek));
+  //   localStorage.setItem("getCardId2", JSON.stringify(getCardId));
+  // } else if (selectedWeek === "week4") {
+  //   localStorage.setItem("selectedWeek3", JSON.stringify(selectedWeek));
+  //   localStorage.setItem("getCardId3", JSON.stringify(getCardId));
+  // }
+
   const handleWorkdstrim = (instructions, wordLimit) => {
     const words = instructions.split(" ");
     if (words.length > wordLimit) {
@@ -61,22 +114,13 @@ const ItemsSection = () => {
     return instructions;
   };
 
-  // storage logic
-  if (selectedWeek === "week1") {
-    localStorage.setItem("selectedWeek", JSON.stringify(selectedWeek));
-    localStorage.setItem("getCardId", JSON.stringify(getCardId));
-  } else if (selectedWeek === "week2") {
-    localStorage.setItem("selectedWeek1", JSON.stringify(selectedWeek));
-    localStorage.setItem("getCardId1", JSON.stringify(getCardId));
-  } else if (selectedWeek === "week3") {
-    localStorage.setItem("selectedWeek2", JSON.stringify(selectedWeek));
-    localStorage.setItem("getCardId2", JSON.stringify(getCardId));
-  } else if (selectedWeek === "week4") {
-    localStorage.setItem("selectedWeek3", JSON.stringify(selectedWeek));
-    localStorage.setItem("getCardId3", JSON.stringify(getCardId));
-  }
-
-  console.log(selectedWeek, getCardId, "selectedWeek");
+  console.log(
+    dataArray,
+    "mergedValues",
+    // combinedState,
+    "lkgsfiuwe",
+    globallyStore
+  );
   return (
     <>
       <div>

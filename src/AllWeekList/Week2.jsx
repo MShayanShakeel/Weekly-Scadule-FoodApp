@@ -5,20 +5,23 @@ import { GlobalContext } from "../Store/GlobalContext";
 
 const Week2 = () => {
   const { id } = useParams();
+  const { globallyStore, setGloballyStore } = useContext(GlobalContext);
+  const [selectedWeek, setSelectedWeek] = useState([]);
+  const [deletIDStore, setDeletIDStore] = useState("");
 
-  const { selectedWeek, setSelectedWeek, getCardId, setGetCardId } =
-    useContext(GlobalContext);
-
-    // MODEL CODE LLOGIC START
+  // MODEL CODE LLOGIC START
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deletModalOpen, setDeletIsModalOpen] = useState(false);
   const openModal = () => {
     setIsModalOpen(true);
+    setDeletIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setDeletIsModalOpen(false);
   };
-// MODEL CODE LLOGIC END
+  // MODEL CODE LLOGIC END
   useEffect(() => {
     setSelectedWeek(id);
   }, [id]);
@@ -27,32 +30,13 @@ const Week2 = () => {
     const selectedValue = event.target.value;
     setSelectedWeek(selectedValue);
   };
-  const savedItemValues = localStorage.getItem("selectedWeek1");
-  const savedGetCardId = localStorage.getItem("getCardId1");
 
-  const safeParseJSON = (data) => {
-    try {
-      return data ? JSON.parse(data) : null;
-    } catch (error) {
-      console.error("Error parsing JSON:", error);
-      return null;
-    }
-  };
+  const handleDelete = () => {
+    const updatedGloballyStore = globallyStore.filter(
+      (item) => item.getCardId.id !== deletIDStore
+    );
 
-  const parsedItemValues = safeParseJSON(savedItemValues);
-  const parsedGetCardId = safeParseJSON(savedGetCardId);
-
-  const recipesArray = Array.isArray(parsedGetCardId)
-    ? parsedGetCardId
-    : [parsedGetCardId];
-
-  const handleRemoveitem = () => {
-    if (parsedItemValues === "week2") {
-      localStorage.removeItem("getCardId1");
-      localStorage.removeItem("selectedWeek1");
-    } else {
-      console.log("something is want to Wrong");
-    }
+    setGloballyStore(updatedGloballyStore);
   };
 
   return (
@@ -76,6 +60,23 @@ const Week2 = () => {
             </select>
 
             <button className="model-selecter">Save</button>
+          </span>
+        </Modal>
+      </div>
+
+      <div>
+        <Modal isOpen={deletModalOpen} onClose={closeModal}>
+          <h2>Your Want to delet this iitem</h2>
+          <span className="Model-span">
+            <button
+              className="model-selecter"
+              onClick={() => {
+                handleDelete();
+                closeModal();
+              }}
+            >
+              YES
+            </button>
           </span>
         </Modal>
       </div>
@@ -106,49 +107,54 @@ const Week2 = () => {
           </ul>
         </div>
         <div className="ItemsSection-Cards">
-          {parsedItemValues === "week2" ? (
-            Array.isArray(recipesArray) && recipesArray.length > 0 ? (
-              recipesArray.map((recipe, index) => (
+          {Array.isArray(globallyStore) && globallyStore.length > 0 ? (
+            globallyStore
+              .filter((recipe) => recipe?.selectedWeek === "week1")
+              .map((recipe, index) => (
                 <div
-                  onClick={() => {
-                    setGetCardId(recipe);
-                  }}
+                  onClick={() => setGetCardId(recipe)}
                   key={index}
                   className="card"
                 >
-                  <img src={recipe?.image} alt="recipe img" />
+                  {console.log(recipe?.getCardId, "shayan")}
+                  <img src={recipe?.getCardId?.image} alt="recipe img" />
                   <div className="container">
                     <h4>
-                      {console.log(recipe, "recipe")}
-                      <b>{recipe?.name}</b>
+                      {/* {console.log(recipe, "recipe")} */}
+                      <b>{recipe?.getCardId?.name}</b>
                     </h4>
-
-                    <p>{recipe?.instructions.join(" ")}</p>
-
+                    <p>{recipe?.getCardId?.instructions}</p>
                     <div className="rating-section">
                       <span>
                         <b>Cuisine:</b>
-                        <p>{recipe?.cuisine}</p>
+                        <p>{recipe?.getCardId?.cuisine}</p>
                       </span>
-
                       <span>
                         <b>Rating:</b>
-                        <p>{recipe?.rating}</p>
+                        <p>{recipe?.getCardId?.rating}</p>
+                        {console.log(
+                          recipe?.getCardId?.id,
+                          "recipe?.getCardId?.id"
+                        )}
                       </span>
                     </div>
+                    <button
+                      className="model-selecter delete-button"
+                      onClick={() => {
+                        const id = recipe?.getCardId?.id;
+                        setDeletIDStore(id);
+                        openModal();
+                      }}
+                    >
+                      DELETE THIS MEAL
+                    </button>
                   </div>
                 </div>
               ))
-            ) : (
-              <p>No recipes available.</p>
-            )
           ) : (
-            <p>No recipes available  in Week 2.</p>
+            <p>No recipes available.</p>
           )}
         </div>
-        <button className="model-selecter" onClick={handleRemoveitem}>
-          DELETE THIS MEAL
-        </button>
       </div>
     </>
   );
